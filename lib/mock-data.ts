@@ -1,0 +1,125 @@
+import type { Project, User, BotAnalytics } from "@/types"
+
+export const mockUser: User = {
+  id: "user-1",
+  name: "John Doe",
+  email: "john@example.com",
+  avatar: "/diverse-user-avatars.png",
+  createdAt: new Date("2024-01-01"),
+}
+
+export const mockAnalytics: BotAnalytics = {
+  totalConversations: 1247,
+  activeUsers: 89,
+  averageResponseTime: 1.2,
+  dailyStats: [
+    { date: "2024-01-01", conversations: 45, users: 12, messages: 180 },
+    { date: "2024-01-02", conversations: 52, users: 15, messages: 208 },
+    { date: "2024-01-03", conversations: 38, users: 10, messages: 152 },
+    { date: "2024-01-04", conversations: 61, users: 18, messages: 244 },
+    { date: "2024-01-05", conversations: 47, users: 13, messages: 188 },
+    { date: "2024-01-06", conversations: 55, users: 16, messages: 220 },
+    { date: "2024-01-07", conversations: 42, users: 11, messages: 168 },
+  ],
+  weeklyStats: [
+    { week: "2024-W01", conversations: 340, users: 95, messages: 1360 },
+    { week: "2024-W02", conversations: 298, users: 82, messages: 1192 },
+    { week: "2024-W03", conversations: 365, users: 103, messages: 1460 },
+    { week: "2024-W04", conversations: 244, users: 67, messages: 976 },
+  ],
+  monthlyStats: [
+    { month: "2024-01", conversations: 1247, users: 347, messages: 4988 },
+    { month: "2023-12", conversations: 1156, users: 312, messages: 4624 },
+    { month: "2023-11", conversations: 987, users: 278, messages: 3948 },
+  ],
+}
+
+export const mockProjects: Project[] = [
+  {
+    id: "project-1",
+    name: "E-commerce Support",
+    description: "Customer support chatbots for online store",
+    createdAt: new Date("2024-01-01"),
+    updatedAt: new Date("2024-01-15"),
+    ownerId: "user-1",
+    members: [
+      {
+        userId: "user-1",
+        user: mockUser,
+        role: "owner",
+        joinedAt: new Date("2024-01-01"),
+      },
+    ],
+    bots: [
+      {
+        id: "bot-1",
+        name: "support-bot",
+        displayName: "Support Assistant",
+        description: "Helps customers with orders and returns",
+        welcomeMessage: "Hi! How can I help you today?",
+        themeColor: "#3b82f6",
+        position: "bottom-right",
+        projectId: "project-1",
+        apiKey: "sk-bot1-abc123",
+        isActive: true,
+        createdAt: new Date("2024-01-01"),
+        updatedAt: new Date("2024-01-10"),
+        analytics: mockAnalytics,
+        files: [],
+        conversations: [],
+      },
+      {
+        id: "bot-2",
+        name: "sales-bot",
+        displayName: "Sales Helper",
+        description: "Assists with product recommendations",
+        welcomeMessage: "Looking for something specific? I can help!",
+        themeColor: "#10b981",
+        position: "bottom-left",
+        projectId: "project-1",
+        apiKey: "sk-bot2-def456",
+        isActive: true,
+        createdAt: new Date("2024-01-05"),
+        updatedAt: new Date("2024-01-12"),
+        analytics: { ...mockAnalytics, totalConversations: 892, activeUsers: 67 },
+        files: [],
+        conversations: [],
+      },
+    ],
+  },
+  {
+    id: "project-2",
+    name: "Educational Platform",
+    description: "AI tutors for online learning",
+    createdAt: new Date("2024-01-10"),
+    updatedAt: new Date("2024-01-20"),
+    ownerId: "user-1",
+    members: [
+      {
+        userId: "user-1",
+        user: mockUser,
+        role: "owner",
+        joinedAt: new Date("2024-01-10"),
+      },
+    ],
+    bots: [
+      {
+        id: "bot-3",
+        name: "math-tutor",
+        displayName: "Math Tutor",
+        description: "Helps students with math problems",
+        welcomeMessage: "Ready to solve some math problems together?",
+        themeColor: "#f59e0b",
+        position: "bottom-right",
+        projectId: "project-2",
+        apiKey: "sk-bot3-ghi789",
+        isActive: true,
+        createdAt: new Date("2024-01-10"),
+        updatedAt: new Date("2024-01-18"),
+        analytics: { ...mockAnalytics, totalConversations: 567, activeUsers: 34 },
+        files: [],
+        conversations: [],
+      },
+    ],
+  },
+]

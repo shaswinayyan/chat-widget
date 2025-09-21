@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -121,5 +121,208 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Smooth transitions for interactive elements */
+  /* Removed transition-smooth class that was causing errors */
+
+  .transition-fast {
+    @apply transition-all duration-150 ease-in-out;
+  }
+
+  /* Hover animations */
+  .hover-lift {
+    @apply transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg;
+  }
+
+  .hover-glow {
+    @apply transition-shadow duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20;
+  }
+
+  /* Loading animations */
+  .pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .bounce-gentle {
+    animation: bounce-gentle 2s infinite;
+  }
+
+  @keyframes bounce-gentle {
+    0%,
+    100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(-5px);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  /* Slide animations */
+  .slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
+  }
+
+  .slide-in-left {
+    animation: slide-in-left 0.3s ease-out;
+  }
+
+  .slide-in-up {
+    animation: slide-in-up 0.4s ease-out;
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Fade animations */
+  .fade-in {
+    animation: fade-in 0.5s ease-in;
+  }
+
+  .fade-in-delay {
+    animation: fade-in 0.5s ease-in 0.2s both;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Stagger animations for lists */
+  .stagger-item {
+    animation: slide-in-up 0.4s ease-out;
+  }
+
+  .stagger-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stagger-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stagger-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stagger-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .stagger-item:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+  .stagger-item:nth-child(6) {
+    animation-delay: 0.6s;
+  }
+
+  /* Responsive grid improvements */
+  .responsive-grid {
+    @apply grid gap-4;
+    @apply grid-cols-1;
+    @apply sm:grid-cols-2;
+    @apply lg:grid-cols-3;
+    @apply xl:grid-cols-4;
+  }
+
+  .responsive-grid-2 {
+    @apply grid gap-4;
+    @apply grid-cols-1;
+    @apply md:grid-cols-2;
+  }
+
+  /* Mobile-first responsive spacing */
+  .responsive-padding {
+    @apply px-4 py-6;
+    @apply sm:px-6 sm:py-8;
+    @apply lg:px-8 lg:py-10;
+  }
+
+  .responsive-margin {
+    @apply mx-4 my-6;
+    @apply sm:mx-6 sm:my-8;
+    @apply lg:mx-8 lg:my-10;
+  }
+
+  /* Interactive states */
+  .interactive {
+    @apply transition-fast cursor-pointer;
+    @apply hover:bg-accent/50 hover:scale-[1.02];
+    @apply active:scale-[0.98];
+    @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-black/10 backdrop-blur-md border border-white/10;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    @apply text-sm leading-relaxed;
+  }
+
+  .mobile-padding {
+    @apply px-3 py-4;
+  }
+
+  .mobile-spacing {
+    @apply space-y-3;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .transition-fast,
+  .hover-lift,
+  .hover-glow,
+  .slide-in-right,
+  .slide-in-left,
+  .slide-in-up,
+  .fade-in,
+  .fade-in-delay,
+  .stagger-item {
+    animation: none !important;
+    transition: none !important;
   }
 }
