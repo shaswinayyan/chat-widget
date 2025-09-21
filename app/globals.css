@@ -124,15 +124,9 @@
   }
 }
 
+/* Completely rebuilt utilities layer with only standard Tailwind classes */
 @layer utilities {
-  /* Smooth transitions for interactive elements */
-  /* Removed transition-smooth class that was causing errors */
-
-  .transition-fast {
-    @apply transition-all duration-150 ease-in-out;
-  }
-
-  /* Hover animations */
+  /* Hover animations using only standard Tailwind classes */
   .hover-lift {
     @apply transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg;
   }
@@ -252,35 +246,25 @@
 
   /* Responsive grid improvements */
   .responsive-grid {
-    @apply grid gap-4;
-    @apply grid-cols-1;
-    @apply sm:grid-cols-2;
-    @apply lg:grid-cols-3;
-    @apply xl:grid-cols-4;
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
   }
 
   .responsive-grid-2 {
-    @apply grid gap-4;
-    @apply grid-cols-1;
-    @apply md:grid-cols-2;
+    @apply grid gap-4 grid-cols-1 md:grid-cols-2;
   }
 
   /* Mobile-first responsive spacing */
   .responsive-padding {
-    @apply px-4 py-6;
-    @apply sm:px-6 sm:py-8;
-    @apply lg:px-8 lg:py-10;
+    @apply px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10;
   }
 
   .responsive-margin {
-    @apply mx-4 my-6;
-    @apply sm:mx-6 sm:my-8;
-    @apply lg:mx-8 lg:my-10;
+    @apply mx-4 my-6 sm:mx-6 sm:my-8 lg:mx-8 lg:my-10;
   }
 
-  /* Interactive states */
+  /* Interactive states - using only standard Tailwind classes */
   .interactive {
-    @apply transition-fast cursor-pointer;
+    @apply transition-all duration-150 ease-in-out cursor-pointer;
     @apply hover:bg-accent/50 hover:scale-[1.02];
     @apply active:scale-[0.98];
     @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
@@ -311,9 +295,8 @@
   }
 }
 
-/* Reduced motion preferences */
+/* Reduced motion preferences - removed all references to custom transition classes */
 @media (prefers-reduced-motion: reduce) {
-  .transition-fast,
   .hover-lift,
   .hover-glow,
   .slide-in-right,
