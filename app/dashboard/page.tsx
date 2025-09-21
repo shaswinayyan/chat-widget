@@ -31,6 +31,7 @@ interface ChatBot {
   files: string[]
   usageCount: number
   createdAt: string
+  apiKey: string 
 }
 
 export default function DashboardPage() {
@@ -76,20 +77,21 @@ export default function DashboardPage() {
     setLoginEmail("")
   }
 
-  const createBot = (botData: Omit<ChatBot, "id" | "usageCount" | "createdAt">) => {
-    const newBot: ChatBot = {
-      ...botData,
-      id: `bot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      usageCount: 0,
-      createdAt: new Date().toISOString(),
-    }
-    setBots((prev) => [...prev, newBot])
-    setIsCreateOpen(false)
-    toast({
-      title: "Bot created successfully",
-      description: `${newBot.name} is ready to use!`,
-    })
+const createBot = (botData: Omit<ChatBot, "id" | "usageCount" | "createdAt" | "apiKey">) => {
+  const newBot: ChatBot = {
+    ...botData,
+    id: `bot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    usageCount: 0,
+    createdAt: new Date().toISOString(),
+    apiKey: crypto.randomUUID(), // <-- generate unique API key
   }
+  setBots((prev) => [...prev, newBot])
+  setIsCreateOpen(false)
+  toast({
+    title: "Bot created successfully",
+    description: `${newBot.name} is ready to use!`,
+  })
+}
 
   const updateBot = (updatedBot: ChatBot) => {
     setBots((prev) => prev.map((bot) => (bot.id === updatedBot.id ? updatedBot : bot)))
@@ -109,7 +111,7 @@ export default function DashboardPage() {
   }
 
   const copyEmbedCode = (bot: ChatBot) => {
-    const embedCode = `<script src="${process.env.NEXT_PUBLIC_APP_URL || "https://your-app.vercel.app"}/widget.js" data-botid="${bot.id}"></script>`
+    const embedCode = `<script src="${process.env.NEXT_PUBLIC_APP_URL}/widget.js" data-botid="${bot.id}" data-api-key="${bot.apiKey}"></script>`
     navigator.clipboard.writeText(embedCode)
     toast({
       title: "Embed code copied!",
