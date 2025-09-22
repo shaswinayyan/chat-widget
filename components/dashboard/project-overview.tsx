@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
   DialogContent,
@@ -18,10 +18,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus, Bot, Users, BarChart3, Calendar, Folder, Settings, MoreHorizontal, Pin } from "lucide-react"
-import { TeamManagement } from "./team-management"
+import { ProjectDetail } from "./project/project-details"
 import type { Project } from "@/types"
 
 export function ProjectOverview() {
+  const router = useRouter()
   const { projects, currentProject, setCurrentProject, addProject, currentUser } = useAppStore()
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false)
@@ -54,169 +55,27 @@ export function ProjectOverview() {
     addProject(project)
     setNewProject({ name: "", description: "" })
     setIsCreateProjectOpen(false)
+    
+    // Redirect to the new project
+    router.push(`/dashboard/${project.id}`)
   }
 
-  // If we have a current project selected, show project details with tabs
+  const handleViewProject = (project: Project) => {
+    router.push(`/dashboard/${project.id}`)
+  }
+
+  // If we're on a project detail page, show the project detail component
   if (currentProject) {
     return (
-      <div className="space-y-6 fade-in">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="slide-in-left">
-            <div className="flex items-center gap-2 mb-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setCurrentProject(null)}
-                className="transition-all duration-300 ease-in-out"
-              >
-                ← Back to Projects
-              </Button>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-balance">{currentProject.name}</h1>
-            <p className="text-muted-foreground text-pretty">
-              {currentProject.description || "Manage your chatbots and team members"}
-            </p>
-          </div>
-
-          <div className="flex gap-2 slide-in-right">
-            <Button variant="outline" className="transition-all duration-300 ease-in-out hover-lift bg-transparent">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
-          </div>
-        </div>
-
-        {/* Project Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-            <TabsTrigger value="overview" className="transition-all duration-300 ease-in-out">
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="bots" className="transition-all duration-300 ease-in-out">
-              Bots ({currentProject.bots.length})
-            </TabsTrigger>
-            <TabsTrigger value="team" className="transition-all duration-300 ease-in-out">
-              Team ({currentProject.members.length})
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="transition-all duration-300 ease-in-out">
-              Analytics
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6 fade-in">
-            {/* Stats Cards */}
-            <div className="responsive-grid">
-              <Card className="hover-glow transition-all duration-300 ease-in-out stagger-item">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Bots</CardTitle>
-                  <Bot className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{currentProject.bots.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="hover-glow transition-all duration-300 ease-in-out stagger-item">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Team Members</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{currentProject.members.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="hover-glow transition-all duration-300 ease-in-out stagger-item">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Conversations</CardTitle>
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {currentProject.bots.reduce((acc, bot) => acc + bot.analytics.totalConversations, 0)}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="hover-glow transition-all duration-300 ease-in-out stagger-item">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {currentProject.bots.reduce((acc, bot) => acc + bot.analytics.activeUsers, 0)}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Bots */}
-            <Card className="slide-in-up">
-              <CardHeader>
-                <CardTitle>Recent Bots</CardTitle>
-                <CardDescription>Your most recently updated chatbots</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {currentProject.bots.length > 0 ? (
-                  <div className="space-y-4">
-                    {currentProject.bots.slice(0, 5).map((bot, index) => (
-                      <div
-                        key={bot.id}
-                        className={`flex items-center justify-between p-3 border rounded-lg interactive stagger-item`}
-                        style={{ animationDelay: `${index * 0.1}s` }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="w-3 h-3 rounded-full transition-all duration-300 ease-in-out"
-                            style={{ backgroundColor: bot.themeColor }}
-                          />
-                          <div>
-                            <h4 className="font-medium">{bot.displayName}</h4>
-                            <p className="text-sm text-muted-foreground">{bot.description}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="transition-all duration-300 ease-in-out">
-                            {bot.analytics.totalConversations} chats
-                          </Badge>
-                          <Badge
-                            variant={bot.isActive ? "default" : "secondary"}
-                            className="transition-all duration-300 ease-in-out"
-                          >
-                            {bot.isActive ? "Active" : "Inactive"}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 fade-in">
-                    <Bot className="h-12 w-12 mx-auto text-muted-foreground mb-4 bounce-gentle" />
-                    <p className="text-muted-foreground">No bots created yet</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="bots" className="fade-in">
-            <div>Bot management content will go here</div>
-          </TabsContent>
-
-          <TabsContent value="team" className="fade-in">
-            <TeamManagement />
-          </TabsContent>
-
-          <TabsContent value="analytics" className="fade-in">
-            <div>Analytics content will go here</div>
-          </TabsContent>
-        </Tabs>
-      </div>
+      <ProjectDetail 
+        project={currentProject} 
+        onBack={() => {
+          setCurrentProject(null)
+          router.push('/dashboard')
+        }} 
+      />
     )
   }
-
   // Show all projects overview
   const displayProjects = projects
 
@@ -440,7 +299,7 @@ export function ProjectOverview() {
                   variant="outline"
                   size="sm"
                   className="flex-1 bg-transparent transition-all duration-300 ease-in-out hover-lift"
-                  onClick={() => setCurrentProject(project)}
+                  onClick={() => handleViewProject(project)}
                 >
                   View Project
                 </Button>

@@ -12,14 +12,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sidebar } from "./sidebar"
-import { Bot, Menu, Settings, User, LogOut, Moon, Sun, Monitor } from "lucide-react"
+import { Bot, Menu, Settings, User, LogOut, Moon, Sun, Monitor, ArrowLeft } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { currentUser, sidebarCollapsed, setSidebarCollapsed, setCurrentUser } = useAppStore()
+  const { currentUser, sidebarCollapsed, setSidebarCollapsed, setCurrentUser, currentProject } = useAppStore()
+  const pathname = usePathname()
+  const router = useRouter()
+
+  // Check if we're on a project detail page
+  const isProjectPage = pathname.includes('/dashboard/') && pathname !== '/dashboard'
 
   // 🔹 Use next-themes
   const { theme, setTheme, systemTheme } = useTheme()
@@ -53,18 +59,31 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-all duration-300 ease-in-out">
         <div className="flex h-16 items-center px-4 gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="transition-all duration-300 ease-in-out hover-lift"
-          >
-            <Menu className="h-4 w-4" />
-          </Button>
+          {isProjectPage ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push('/dashboard')}
+              className="transition-all duration-300 ease-in-out hover-lift"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="transition-all duration-300 ease-in-out hover-lift"
+            >
+              <Menu className="h-4 w-4" />
+            </Button>
+          )}
 
           <div className="flex items-center gap-2 slide-in-left">
             <Bot className="h-6 w-6 text-primary transition-all duration-300 ease-in-out" />
-            <h1 className="text-xl font-semibold">ChatBot SaaS</h1>
+            <h1 className="text-xl font-semibold">
+              {isProjectPage && currentProject ? currentProject.name : "ChatBot SaaS"}
+            </h1>
           </div>
 
           <div className="ml-auto flex items-center gap-4 slide-in-right">
@@ -80,7 +99,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
             {/* User dropdown */}
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger >
                 <Button
                   variant="ghost"
                   className="relative h-8 w-8 rounded-full transition-all duration-300 ease-in-out hover-lift"
@@ -96,7 +115,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
+              <DropdownMenuContent className="w-56 " align="end">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     <p className="font-medium">{currentUser?.name}</p>

@@ -7,17 +7,38 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Folder, Bot, Plus, BarChart3, Users, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 export function Sidebar() {
-  const { projects, currentProject, setCurrentProject, currentBot, setCurrentBot, sidebarCollapsed } = useAppStore()
+  const { projects, currentProject, setCurrentProject, currentBot, setCurrentBot, sidebarCollapsed, addProject } = useAppStore()
+  const router = useRouter()
 
   const handleProjectClick = (project: (typeof projects)[0]) => {
     setCurrentProject(project)
     setCurrentBot(null)
+    router.push(`/dashboard/${project.id}`)
   }
 
   const handleBotClick = (bot: (typeof projects)[0]["bots"][0]) => {
     setCurrentBot(bot)
+  }
+
+  const handleCreateProject = () => {
+    // Create a simple new project
+    const newProject = {
+      id: `project-${Date.now()}`,
+      name: "New Project",
+      description: "",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      ownerId: "current-user-id", // You'll need to get this from your store
+      members: [],
+      bots: [],
+    }
+    
+    addProject(newProject)
+    setCurrentProject(newProject)
+    router.push(`/dashboard/${newProject.id}`)
   }
 
   return (
@@ -35,7 +56,12 @@ export function Sidebar() {
               {!sidebarCollapsed && <h2 className="text-sm font-semibold text-muted-foreground">PROJECTS</h2>}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-6 w-6 p-0"
+                    onClick={handleCreateProject}
+                  >
                     <Plus className="h-3 w-3" />
                   </Button>
                 </TooltipTrigger>
