@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import { useTheme } from "next-themes"
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -19,29 +19,32 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { currentUser, sidebarCollapsed, setSidebarCollapsed, theme, setTheme, setCurrentUser } = useAppStore()
+  const { currentUser, sidebarCollapsed, setSidebarCollapsed, setCurrentUser } = useAppStore()
+
+  // 🔹 Use next-themes
+  const { theme, setTheme, systemTheme } = useTheme()
+  const currentTheme = theme === "system" ? systemTheme : theme
 
   const handleLogout = () => {
     setCurrentUser(null)
-    // Clear localStorage
     localStorage.clear()
   }
 
   const toggleTheme = () => {
-    const themes = ["light", "dark", "system"] as const
-    const currentIndex = themes.indexOf(theme)
+    const themes = ["light", "dark"] as const
+    const currentIndex = themes.indexOf(theme as any)
     const nextTheme = themes[(currentIndex + 1) % themes.length]
     setTheme(nextTheme)
   }
 
   const getThemeIcon = () => {
-    switch (theme) {
+    switch (currentTheme) {
       case "light":
         return <Sun className="h-4 w-4" />
       case "dark":
         return <Moon className="h-4 w-4" />
       default:
-        return <Monitor className="h-4 w-4" />
+        return <Sun className="h-4 w-4" />
     }
   }
 
@@ -65,6 +68,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           <div className="ml-auto flex items-center gap-4 slide-in-right">
+            {/* Theme toggle */}
             <Button
               variant="ghost"
               size="sm"
@@ -74,6 +78,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               {getThemeIcon()}
             </Button>
 
+            {/* User dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

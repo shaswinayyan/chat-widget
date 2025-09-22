@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Bot, Users, BarChart3, Calendar, Folder, Settings, MoreHorizontal } from "lucide-react"
+import { Plus, Bot, Users, BarChart3, Calendar, Folder, Settings, MoreHorizontal, Pin } from "lucide-react"
 import { TeamManagement } from "./team-management"
 import type { Project } from "@/types"
 
@@ -340,88 +340,121 @@ export function ProjectOverview() {
         {displayProjects.map((project, index) => (
           <Card
             key={project.id}
-            className="hover-glow transition-all duration-300 ease-in-out interactive stagger-item"
+            className="hover-glow transition-all duration-300 ease-in-out interactive stagger-item h-full flex flex-col"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Folder className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg text-balance">{project.name}</CardTitle>
+            {/* Header */}
+            <CardHeader className="pb-3 overflow-hidden">
+              <div className="grid gap-1">
+                {/* Row 1: icon | title | action */}
+                <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+                  <Folder className="h-5 w-5 text-primary flex-shrink-0" />
+                  <span
+                    title={project.name}
+                    className="truncate text-lg font-semibold block min-w-0"
+                  >
+                    {project.name}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled
+                    className="opacity-50 cursor-not-allowed flex-shrink-0 p-2"
+                  >
+                    <Pin className="h-4 w-4" />
+                  </Button>
                 </div>
-                <Button variant="ghost" size="sm" className="transition-all duration-300 ease-in-out">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
+
+                {/* Row 2: description (clamped) */}
+                <p
+                  className="text-sm text-muted-foreground line-clamp-1 "
+                  title={project.description}
+                >
+                  {project.description || "No description provided"}
+                </p>
               </div>
-              <CardDescription className="line-clamp-2 text-pretty">
-                {project.description || "No description provided"}
-              </CardDescription>
             </CardHeader>
 
-            <CardContent>
+            {/* Content */}
+            <CardContent className="flex-1 flex flex-col justify-between ">
               <div className="space-y-4">
                 {/* Project Stats */}
-                <div className="flex items-center justify-between text-sm mobile-optimized">
-                  <div className="flex items-center gap-1">
-                    <Bot className="h-3 w-3" />
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Bot className="h-3 w-3 flex-shrink-0" />
                     <span>{project.bots.length} bots</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-3 w-3" />
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Users className="h-3 w-3 flex-shrink-0" />
                     <span>{project.members.length} members</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    <span className="hidden sm:inline">{new Date(project.createdAt).toLocaleDateString()}</span>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Calendar className="h-3 w-3 flex-shrink-0" />
+                    <span className="hidden sm:inline">
+                      {new Date(project.createdAt).toLocaleDateString()}
+                    </span>
                     <span className="sm:hidden">
-                      {new Date(project.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      {new Date(project.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </span>
                   </div>
                 </div>
 
-                {/* Bots Preview */}
+                {/* Bots Preview (max 2 items + ellipsis) */}
                 {project.bots.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium mb-2">Recent Bots</h4>
                     <div className="space-y-2">
-                      {project.bots.slice(0, 3).map((bot) => (
-                        <div key={bot.id} className="flex items-center gap-2 text-sm">
-                          <div
-                            className="w-2 h-2 rounded-full transition-all duration-300 ease-in-out"
-                            style={{ backgroundColor: bot.themeColor }}
-                          />
-                          <span className="truncate">{bot.displayName}</span>
-                          <Badge variant="secondary" className="text-xs transition-all duration-300 ease-in-out">
-                            {bot.analytics.totalConversations}
+                      {project.bots.slice(0, 2).map((bot) => (
+                        <div
+                          key={bot.id}
+                          className="flex items-center justify-between gap-2 text-sm"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div
+                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: bot.themeColor }}
+                            />
+                            <span className="truncate">{bot.displayName}</span>
+                          </div>
+                          <Badge variant="secondary" className="text-xs flex-shrink-0">
+                            {bot.analytics?.totalConversations ?? 0}
                           </Badge>
                         </div>
                       ))}
-                      {project.bots.length > 3 && (
-                        <div className="text-xs text-muted-foreground">+{project.bots.length - 3} more bots</div>
+                      {project.bots.length > 2 && (
+                        <div className="text-xs text-muted-foreground">
+                          +{project.bots.length - 2} more bots
+                        </div>
                       )}
                     </div>
                   </div>
                 )}
+              </div>
 
-                {/* Actions */}
-                <div className="flex gap-2 pt-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 bg-transparent transition-all duration-300 ease-in-out hover-lift"
-                    onClick={() => setCurrentProject(project)}
-                  >
-                    View Project
-                  </Button>
-                  <Button variant="ghost" size="sm" className="transition-all duration-300 ease-in-out">
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </div>
+              {/* Actions */}
+              <div className="flex gap-2 pt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-transparent transition-all duration-300 ease-in-out hover-lift"
+                  onClick={() => setCurrentProject(project)}
+                >
+                  View Project
+                </Button>
+                <Button variant="ghost" size="sm" className="transition-all duration-300 ease-in-out">
+                  <Settings className="h-4 w-4" />
+                </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+
+
 
       {/* Empty State */}
       {projects.length === 0 && (
