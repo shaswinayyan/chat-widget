@@ -100,7 +100,7 @@ export function ProjectOverview() {
               <DialogTitle>Create New Project</DialogTitle>
               <DialogDescription>Set up a new project to organize your chatbots and team members.</DialogDescription>
             </DialogHeader>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
                 <Label htmlFor="project-name">Project Name</Label>
                 <Input
@@ -108,7 +108,7 @@ export function ProjectOverview() {
                   value={newProject.name}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="E-commerce Support"
-                  className="transition-all duration-300 ease-in-out"
+                  className="mt-4 transition-all duration-300 ease-in-out"
                 />
               </div>
               <div>
@@ -119,7 +119,7 @@ export function ProjectOverview() {
                   onChange={(e) => setNewProject((prev) => ({ ...prev, description: e.target.value }))}
                   placeholder="Customer support chatbots for online store"
                   rows={3}
-                  className="transition-all duration-300 ease-in-out"
+                  className="mt-4 transition-all duration-300 ease-in-out"
                 />
               </div>
               <div className="flex justify-end gap-2">

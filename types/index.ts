@@ -35,6 +35,7 @@ export interface Bot {
   projectId: string
   apiKey: string
   isActive: boolean
+  llmModel?: string
   createdAt: Date
   updatedAt: Date
   analytics: BotAnalytics

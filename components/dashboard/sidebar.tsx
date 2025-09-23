@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Folder, Bot, Plus, BarChart3, Users, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import { NewProjectDialog } from "./new-project-dialog"
 
 export function Sidebar() {
   const { projects, currentProject, setCurrentProject, currentBot, setCurrentBot, sidebarCollapsed, addProject } = useAppStore()
@@ -54,7 +55,7 @@ export function Sidebar() {
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               {!sidebarCollapsed && <h2 className="text-sm font-semibold text-muted-foreground">PROJECTS</h2>}
-              <Tooltip>
+              {/* <Tooltip>
                 <TooltipTrigger asChild>
                   <Button 
                     variant="ghost" 
@@ -68,18 +69,19 @@ export function Sidebar() {
                 <TooltipContent side="right">
                   <p>Create Project</p>
                 </TooltipContent>
-              </Tooltip>
+              </Tooltip> */}
+              <NewProjectDialog triggerAsIcon />
             </div>
 
             <ScrollArea className="flex-1">
-              <div className="space-y-2">
+              <div className="space-y-2 ">
                 {projects.map((project) => (
                   <div key={project.id}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
                           variant={currentProject?.id === project.id ? "secondary" : "ghost"}
-                          className={cn("w-full justify-start", sidebarCollapsed ? "px-2" : "px-3")}
+                          className={cn("w-full justify-start cursor-pointer px-0", sidebarCollapsed ? "px-2" : "px-3")}
                           onClick={() => handleProjectClick(project)}
                         >
                           <Folder className="h-4 w-4 shrink-0" />

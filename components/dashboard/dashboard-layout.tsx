@@ -64,7 +64,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               variant="ghost"
               size="sm"
               onClick={() => router.push('/dashboard')}
-              className="transition-all duration-300 ease-in-out hover-lift"
+              className="transition-all duration-300 ease-in-out hover-lift cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -73,7 +73,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               variant="ghost"
               size="sm"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="transition-all duration-300 ease-in-out hover-lift"
+              className="transition-all duration-300 ease-in-out hover-lift cursor-pointer"
             >
               <Menu className="h-4 w-4" />
             </Button>
@@ -92,7 +92,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               variant="ghost"
               size="sm"
               onClick={toggleTheme}
-              className="transition-all duration-300 ease-in-out hover-lift"
+              className="transition-all duration-300 ease-in-out hover-lift cursor-pointer"
             >
               {getThemeIcon()}
             </Button>
@@ -102,7 +102,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <DropdownMenuTrigger >
                 <Button
                   variant="ghost"
-                  className="relative h-8 w-8 rounded-full transition-all duration-300 ease-in-out hover-lift"
+                  className="relative h-8 w-8 rounded-full transition-all duration-300 ease-in-out hover-lift cursor-pointer"
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
